@@ -1,0 +1,37 @@
+# Keep the build context small and reproducible.
+#
+# Critical: the Dockerfile does `COPY --from=deps /app/node_modules` and then
+# `COPY . .`. Without these ignores the host's pnpm store (symlinks + native
+# binaries) would overwrite the container's installed dependencies, and a
+# stale .next would ship inside the image.
+node_modules
+.next
+out
+build
+dist
+
+# Never bake secrets into an image layer. The app reads these at runtime from
+# the container env (compose env_file), and NEXT_PUBLIC_* are build args.
+.env
+.env.*
+!.env.example
+
+# Repo metadata / CI / docs are not needed to build.
+.git
+.github
+.gitignore
+.gitattributes
+.prettierignore
+.editorconfig
+README.md
+LICENSE
+
+# Deployment plumbing for this host.
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Local noise
+*.log
+tsconfig.tsbuildinfo
+.DS_Store

@@ -1,0 +1,2870 @@
+/* Orbit Meeting — Jitsi-style dark conference theme over LiveKit engine */
+
+/* Dark palette for the meeting room. */
+/* ---------- meeting room ----------
+   Full-black stage, floating brand + self-tile overlays, floating bottom
+   toolbar, and a slide-in right drawer. */
+.orbit-meet {
+  --orbit-bg: #000000;
+  --orbit-panel: #0f1218;
+  --orbit-card: #161a22;
+  --orbit-primary: #246bfd;
+  --orbit-primary-hover: #1d58d8;
+  --orbit-danger: #d93025;
+  --orbit-danger-hover: #b9251b;
+  --orbit-fg: #ffffff;
+  --orbit-muted: #94a3b8;
+  --orbit-btn: rgba(255, 255, 255, 0.14);
+  --orbit-btn-hover: rgba(255, 255, 255, 0.25);
+  --orbit-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100%;
+  background: var(--orbit-bg);
+  color: var(--orbit-fg);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ---------- main body ---------- */
+.orbit-main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  background: #000;
+}
+
+/* ---------- vertical filmstrip (right edge) ---------- */
+.orbit-filmstrip {
+  width: 168px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 8px 96px;
+  overflow-y: auto;
+  background: #111;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
+}
+.orbit-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: #1a1a1a;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  display: block;
+  transition: border-color 0.15s;
+}
+.orbit-thumb:hover {
+  border-color: #4a4a4a;
+}
+.orbit-thumb.is-active {
+  border-color: var(--orbit-accent);
+}
+.orbit-thumb:focus-visible {
+  outline: 2px solid var(--orbit-accent);
+  outline-offset: 2px;
+}
+.orbit-thumb-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.orbit-thumb-video.is-contain {
+  object-fit: contain;
+  background: #000;
+}
+.orbit-thumb-avatar {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+.orbit-thumb-hand {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 13px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+}
+.orbit-thumb-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 5px 3px;
+  font-size: 0.66rem;
+  color: #e2e8f0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  text-align: left;
+}
+.orbit-thumb-mic {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+.orbit-thumb-mic.is-off {
+  color: #f87171;
+}
+.orbit-thumb-mic.is-on {
+  color: #fff;
+}
+.orbit-thumb-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.orbit-thumb-you {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+.orbit-strip-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 46px;
+  background: rgba(17, 17, 17, 0.9);
+  border: 1px solid #2a2a2a;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 12;
+  transition: background 0.15s;
+}
+.orbit-strip-toggle:hover {
+  background: #262626;
+}
+
+/* ---------- "only person here" waiting stage ---------- */
+.orbit-alone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  text-align: center;
+}
+.orbit-alone-media {
+  position: relative;
+  width: min(360px, 70vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.orbit-alone-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  display: block;
+}
+.orbit-alone-avatar {
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #fff;
+}
+.orbit-alone-nocam {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  color: #94a3b8;
+}
+.orbit-alone-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+}
+.orbit-alone-invite {
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.orbit-alone-invite:hover {
+  background: #222;
+  border-color: #555;
+}
+.orbit-alone-room {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  max-width: 32ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.orbit-alone-controls {
+  display: flex;
+  gap: 10px;
+}
+.orbit-alone-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1c1c1c;
+  border: 1px solid #2f2f2f;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.orbit-alone-btn svg {
+  width: 19px;
+  height: 19px;
+}
+.orbit-alone-btn:hover {
+  background: #262626;
+}
+.orbit-alone-btn.is-off {
+  color: #f87171;
+}
+
+/* ---------- stage ---------- */
+.orbit-stage {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  background: #000;
+  overflow: hidden;
+}
+.orbit-stage.is-empty {
+  color: var(--orbit-muted);
+  font-size: 15px;
+  align-items: center;
+  justify-content: center;
+}
+.orbit-videowrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.orbit-speakerwrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+}
+
+/* speaker / screen-share tile */
+.orbit-tile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+.orbit-tile-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.orbit-tile.screenshare-tile .orbit-tile-video {
+  object-fit: contain;
+  background: #000;
+}
+.orbit-tile-avatar {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.6rem;
+  font-weight: 700;
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+.orbit-tile.speaking .orbit-tile-avatar {
+  transform: scale(1.04);
+  box-shadow: 0 0 0 3px var(--orbit-primary);
+}
+/* screen-share pending placeholder (track not attached yet) */
+.orbit-tile-sharewait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--orbit-muted);
+  font-size: 0.95rem;
+}
+.orbit-tile-sharewait-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+.orbit-card-sharewait {
+  font-size: 1.8rem;
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+.orbit-thumb-avatar.is-share {
+  font-size: 1.1rem;
+  opacity: 0.7;
+  filter: grayscale(1);
+}
+.orbit-tile-nocam {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  width: 20px;
+  height: 20px;
+  color: var(--orbit-muted);
+}
+.orbit-tile.screenshare-tile .orbit-tile-foot {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+.orbit-tile-foot {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.orbit-tile-name,
+.orbit-card-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  background: rgba(0, 0, 0, 0.62);
+  padding: 3px 7px;
+  border-radius: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.orbit-card-mic {
+  width: 12px;
+  height: 12px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+.orbit-card-you {
+  color: var(--orbit-muted);
+}
+.orbit-conn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* grid view */
+.orbit-gridview {
+  width: 100%;
+  height: 100%;
+  padding: 16px 16px 96px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  align-content: start;
+}
+.orbit-card {
+  position: relative;
+  background: #14171f;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 170px;
+}
+.orbit-card-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.orbit-card-video.is-contain {
+  object-fit: contain;
+  background: #000;
+}
+.orbit-card-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #fff;
+}
+.orbit-card-name {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  right: 12px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+}
+
+/* hand raised */
+.orbit-hand-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  animation: orbit-bounce 0.6s infinite alternate ease-in-out;
+  z-index: 3;
+}
+@keyframes orbit-bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-6px);
+  }
+}
+
+/* ---------- floating bottom toolbar ---------- */
+.orbit-toolbar-zone {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+  z-index: 30;
+  pointer-events: none;
+  padding: 0 16px;
+  /* Jitsi-style idle auto-hide. `visibility` is delayed by the fade duration
+     on the way out and immediate on the way back in, so the toolbar can never
+     be clicked or tabbed to while invisible. */
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0s linear 0s;
+}
+.orbit-toolbar-zone.is-hidden {
+  opacity: 0;
+  transform: translateY(12px);
+  visibility: hidden;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0s linear 0.35s;
+}
+/* pointer-events is inherited, so the pill must be disabled explicitly —
+   otherwise `auto` here would keep the hidden toolbar clickable. */
+.orbit-toolbar-zone.is-hidden .orbit-toolbar {
+  pointer-events: none;
+}
+.orbit-toolbar {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 22, 30, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.8);
+  max-width: calc(100vw - 32px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.orbit-toolbar::-webkit-scrollbar {
+  display: none;
+}
+.orbit-toolbar-divider {
+  width: 1px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+.orbit-tool {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: var(--orbit-btn);
+  border: 1px solid transparent;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: var(--orbit-transition);
+}
+.orbit-tool svg {
+  width: 19px;
+  height: 19px;
+}
+.orbit-tool:hover {
+  background: var(--orbit-btn-hover);
+  transform: translateY(-2px);
+}
+.orbit-tool:active {
+  transform: translateY(0);
+}
+.orbit-tool:focus-visible {
+  outline: 2px solid var(--orbit-primary);
+  outline-offset: 2px;
+}
+.orbit-tool:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+.orbit-tool.is-off {
+  background: rgba(220, 38, 38, 0.22);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.3);
+}
+.orbit-tool.is-highlight {
+  background: rgba(36, 107, 253, 0.25);
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.4);
+}
+.orbit-tool.is-donate {
+  color: #f472b6;
+}
+
+/* ---------- local recording ---------- */
+.orbit-tool.is-recording {
+  background: rgba(220, 38, 38, 0.28);
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.55);
+}
+.orbit-rec-chip {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(18, 22, 30, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  pointer-events: auto;
+}
+.orbit-rec-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: orbit-rec-pulse 1.4s ease-in-out infinite;
+}
+@keyframes orbit-rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+.orbit-rec-time {
+  font-variant-numeric: tabular-nums;
+  color: #fca5a5;
+}
+.orbit-rec-note {
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--orbit-muted);
+}
+.orbit-rec-stop {
+  border: none;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  background: #dc2626;
+  cursor: pointer;
+}
+.orbit-rec-stop:hover {
+  background: #b91c1c;
+}
+.orbit-rec-chip.is-saving {
+  border-color: rgba(148, 163, 184, 0.4);
+  font-weight: 500;
+}
+.orbit-rec-chip.is-error {
+  border-color: rgba(248, 113, 113, 0.6);
+  background: rgba(69, 10, 10, 0.94);
+  color: #fecaca;
+  font-weight: 500;
+  max-width: min(520px, calc(100vw - 32px));
+  letter-spacing: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-rec-dot {
+    animation: none;
+  }
+}
+.orbit-tool-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  background: var(--orbit-primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+.orbit-tool-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #37d67a;
+  box-shadow: 0 0 0 2px rgba(18, 22, 30, 0.9);
+}
+
+/* end-call split button */
+.orbit-endcall {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.orbit-endcall-main {
+  background: var(--orbit-danger);
+  color: #fff;
+  border: none;
+  border-radius: 8px 0 0 8px;
+  padding: 0 14px;
+  height: 42px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: var(--orbit-transition);
+  white-space: nowrap;
+}
+.orbit-endcall-main svg {
+  width: 17px;
+  height: 17px;
+}
+.orbit-endcall-main:hover {
+  background: var(--orbit-danger-hover);
+}
+.orbit-endcall-more {
+  background: var(--orbit-danger);
+  color: #fff;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0 8px 8px 0;
+  width: 28px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--orbit-transition);
+}
+.orbit-endcall-more svg {
+  width: 14px;
+  height: 14px;
+}
+.orbit-endcall-more:hover {
+  background: var(--orbit-danger-hover);
+}
+.orbit-exitpop {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  background: #141820;
+  border: 1px solid #28303f;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  width: 210px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 50;
+  animation: orbit-pop-in 0.18s ease-out;
+}
+.orbit-exitpop button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: var(--orbit-transition);
+  width: 100%;
+}
+.orbit-exitpop button svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.orbit-exitpop button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.orbit-exitpop button.is-danger {
+  color: #f87171;
+}
+.orbit-exitpop button.is-danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+@keyframes orbit-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ---------- right drawer ---------- */
+.orbit-drawer {
+  width: 350px;
+  min-width: 350px;
+  background: var(--orbit-panel);
+  border-left: 1px solid #1f2430;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  z-index: 25;
+  animation: orbit-slide-in 0.22s ease-out;
+}
+@keyframes orbit-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.orbit-drawer-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1f2430;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.orbit-drawer-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.orbit-drawer-title svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* Translated-audio playback meter, in the translator drawer header. Driven by
+   an AnalyserNode on the translated output gain, so it tracks the real signal. */
+.orbit-vis {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+  flex: none;
+  padding: 0 2px;
+  margin-left: 2px;
+}
+.orbit-vis-bar {
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--orbit-muted);
+  opacity: 0.4;
+  transform-origin: 50% 50%;
+  transition:
+    transform 60ms linear,
+    background-color 160ms ease,
+    opacity 160ms ease;
+}
+.orbit-vis.is-playing .orbit-vis-bar {
+  background: var(--orbit-accent, #4f8cff);
+  opacity: 0.95;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-vis-bar {
+    transition: none;
+  }
+}
+
+.orbit-drawer-x {
+  background: none;
+  border: none;
+  color: var(--orbit-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.orbit-drawer-x:hover {
+  color: #fff;
+}
+.orbit-drawer-body {
+  flex: 1;
+  padding: 18px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+}
+.orbit-empty {
+  color: var(--orbit-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px 12px;
+}
+
+/* chat */
+.orbit-chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.orbit-chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.orbit-chat-meta {
+  font-size: 0.75rem;
+  color: var(--orbit-muted);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.orbit-chat-meta strong {
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.orbit-chat-meta strong.is-own {
+  color: #60a5fa;
+}
+.orbit-chat-bubble {
+  background: #191f2b;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: #e6edf6;
+  overflow-wrap: anywhere;
+}
+.orbit-chat-bubble a {
+  color: #8ab8ff;
+}
+.orbit-chat-bar {
+  padding: 14px;
+  border-top: 1px solid #1f2430;
+  display: flex;
+  gap: 8px;
+}
+.orbit-chat-input {
+  flex: 1;
+  min-width: 0;
+  background: #181d26;
+  border: 1px solid #28303e;
+  border-radius: 6px;
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+}
+.orbit-chat-input:focus {
+  border-color: var(--orbit-primary);
+}
+.orbit-chat-send {
+  background: var(--orbit-primary);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--orbit-transition);
+}
+.orbit-chat-send:hover:not(:disabled) {
+  background: var(--orbit-primary-hover);
+}
+.orbit-chat-send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* participants sidebar */
+.orbit-part-search {
+  background: #141923;
+  border: 1px solid #28303f;
+  color: #fff;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+}
+.orbit-part-search:focus {
+  border-color: var(--orbit-primary);
+}
+.orbit-part-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #151922;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+.orbit-part-row:hover {
+  background: #1b1f2a;
+}
+.orbit-part-row[data-speaking='true'] {
+  background: #16233a;
+}
+.orbit-part-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  transition: box-shadow 0.15s;
+}
+.orbit-part-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.orbit-part-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #e6edf6;
+}
+.orbit-part-tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.orbit-part-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
+  padding: 1px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.orbit-part-badge.is-mod {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+}
+.orbit-part-badge.is-hand,
+.orbit-part-badge.is-share {
+  background: transparent;
+  padding: 0;
+  font-size: 0.78rem;
+}
+.orbit-part-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.orbit-part-mic {
+  width: 15px;
+  height: 15px;
+}
+.orbit-part-mic.is-off {
+  color: #ef4444;
+}
+.orbit-part-mic.is-on {
+  color: #6b7280;
+}
+.orbit-part-nocam {
+  font-size: 0.68rem;
+  color: var(--orbit-muted);
+}
+.orbit-part-conn {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* translator */
+.orbit-lang-search {
+  position: relative;
+  width: 100%;
+}
+.orbit-lang-search svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: #64748b;
+  pointer-events: none;
+}
+.orbit-lang-search input {
+  width: 100%;
+  background: #141923;
+  border: 1px solid #28303f;
+  color: #fff;
+  padding: 9px 12px 9px 34px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+}
+.orbit-lang-search input:focus {
+  border-color: var(--orbit-primary);
+}
+.orbit-lang-select option {
+  background: #141923;
+  color: #fff;
+}
+.orbit-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(36, 107, 253, 0.15);
+  color: #60a5fa;
+  width: fit-content;
+}
+.orbit-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #60a5fa;
+  flex-shrink: 0;
+}
+/* incoming-audio ducking slider */
+.orbit-vol {
+  width: 100%;
+  accent-color: var(--orbit-primary);
+  cursor: pointer;
+}
+.orbit-vol-read {
+  font-size: 0.78rem;
+  color: var(--orbit-muted);
+  font-variant-numeric: tabular-nums;
+}
+.orbit-trans-script {
+  display: flex;
+  flex-direction: column;
+}
+.orbit-trans-script h4 {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--orbit-muted);
+}
+/* Scrolling transcript boxes. Fixed height so they scroll internally instead of
+   growing the drawer without bound. */
+.orbit-trans-script-body {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  background: #141923;
+  border: 1px solid #28303f;
+  border-radius: 8px;
+  padding: 10px 12px;
+  height: 132px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  /* Keeps the newest line clear of the top/bottom edge when scrolled. */
+  scroll-padding-block: 10px;
+}
+.orbit-trans-script-body:focus-visible {
+  outline: 2px solid var(--orbit-accent, #4f8cff);
+  outline-offset: 1px;
+}
+/* Scrollbar kept unobtrusive but visible enough to hint there is more text. */
+.orbit-trans-script-body::-webkit-scrollbar {
+  width: 8px;
+}
+.orbit-trans-script-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.orbit-trans-script-body::-webkit-scrollbar-thumb {
+  background: #384256;
+  border-radius: 999px;
+}
+.orbit-trans-script-body::-webkit-scrollbar-thumb:hover {
+  background: #4a5670;
+}
+
+/* The source is what was said: neutral, slightly dimmer so it reads as input. */
+.orbit-trans-script-body.is-source {
+  color: #b9c3d4;
+}
+/* The translation is the result the user came for: accented, and marked with a
+   coloured edge so the two boxes are never confused at a glance. */
+.orbit-trans-script-body.is-output {
+  color: #7cc4ff;
+  border-color: #2f4a6b;
+  border-left: 3px solid #4f8cff;
+  background: #121a26;
+}
+
+.orbit-trans-jump {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid #2f3a4d;
+  background: #1b2230;
+  color: #9fb0c8;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.orbit-trans-jump:hover {
+  background: #232c3d;
+  color: #d7e2f0;
+}
+
+/* ---------- settings dialog (Jitsi-style) ---------- */
+.orbit-set {
+  background: #161b24;
+  border: 1px solid #283140;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100dvh - 32px);
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  animation: orbit-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbit-set-head {
+  padding: 16px 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.orbit-set-title {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.orbit-set-title svg {
+  width: 20px;
+  height: 20px;
+}
+.orbit-set-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 20px 0;
+  border-bottom: 1px solid #232b38;
+}
+.orbit-set-tab {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--orbit-muted);
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 8px 12px 12px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.orbit-set-tab:hover {
+  color: #fff;
+}
+.orbit-set-tab.is-active {
+  color: #fff;
+}
+.orbit-set-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: var(--orbit-primary);
+}
+.orbit-set-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.orbit-set-section {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.orbit-set-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--orbit-muted);
+}
+.orbit-set-select {
+  width: 100%;
+  background: #0c0f14;
+  border: 1px solid #2a3342;
+  border-radius: 6px;
+  color: #fff;
+  padding: 9px 11px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.orbit-set-select:focus {
+  border-color: var(--orbit-primary);
+}
+.orbit-set-select option {
+  background: #0c0f14;
+  color: #fff;
+}
+.orbit-set-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--orbit-muted);
+  line-height: 1.45;
+}
+
+/* live camera preview */
+.orbit-set-preview {
+  margin-top: 4px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0c0f14;
+  border: 1px solid #232b38;
+  aspect-ratio: 16 / 9;
+  /* Full width of the dialog, the way Jitsi's device preview is. Previously
+     capped at 280px, which made a 16:9 preview only 158px tall. */
+  width: 100%;
+}
+.orbit-set-preview-el {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* mirrored, like a real self-view */
+  display: block;
+}
+
+/* live mic input-level meter */
+.orbit-set-meter {
+  margin-top: 4px;
+  height: 8px;
+  border-radius: 999px;
+  background: #0c0f14;
+  border: 1px solid #232b38;
+  overflow: hidden;
+}
+.orbit-set-meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22c55e, #84cc16);
+  transition:
+    width 0.08s linear,
+    background 0.2s;
+}
+.orbit-set-meter-fill[data-hot='true'] {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+}
+
+/* background effects */
+.orbit-set-bgs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.orbit-set-bg {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.orbit-set-bg.is-pending {
+  opacity: 0.55;
+  cursor: progress;
+  pointer-events: none;
+}
+.orbit-set-bg-thumb {
+  width: 76px;
+  height: 56px;
+  border-radius: 6px;
+  border: 2px solid #2a3342;
+  display: block;
+  transition: border-color 0.15s;
+}
+.orbit-set-bg.is-active .orbit-set-bg-thumb {
+  border-color: var(--orbit-primary);
+}
+.orbit-set-bg-thumb.is-plain {
+  background: linear-gradient(135deg, #2a3342 0%, #1a2028 100%);
+}
+.orbit-set-bg-thumb.is-blur {
+  background: #2a3342;
+  position: relative;
+  overflow: hidden;
+}
+.orbit-set-bg-thumb.is-blur::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  background:
+    radial-gradient(circle at 30% 35%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(circle at 70% 65%, rgba(120, 170, 255, 0.3), transparent 55%);
+}
+.orbit-set-bg-name {
+  font-size: 0.76rem;
+  color: var(--orbit-muted);
+}
+.orbit-set-bg.is-active .orbit-set-bg-name {
+  color: #fff;
+}
+
+/* settings toggles (More tab) */
+.orbit-set-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #141923;
+  border: 1px solid #28303f;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.orbit-set-toggle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.orbit-set-toggle-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+.orbit-set-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--orbit-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* keyboard shortcut reference */
+.orbit-set-keys {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.orbit-set-keys li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.84rem;
+  color: var(--orbit-muted);
+}
+.orbit-set-keys em {
+  font-style: normal;
+  margin-left: 6px;
+  color: #cbd5e1;
+}
+.orbit-set-keys kbd,
+.orbit-set-hint kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  background: #0c0f14;
+  border: 1px solid #2a3342;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: #fff;
+}
+.orbit-mbtn.danger {
+  background: var(--orbit-danger);
+  color: #fff;
+  align-self: flex-start;
+}
+.orbit-mbtn.danger:hover {
+  background: var(--orbit-danger-hover);
+}
+
+/* profile tab */
+.orbit-set-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+.orbit-set-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+.orbit-set-profile .orbit-set-section {
+  width: 100%;
+}
+.orbit-set-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.orbit-set-avatarrow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* The native file input is replaced by a styled <label> trigger. */
+.orbit-set-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.orbit-set-locked {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: #11151d;
+  border: 1px solid #232b38;
+  opacity: 0.72;
+}
+.orbit-set-locked-label {
+  font-size: 0.88rem;
+  color: #e2e8f0;
+}
+.orbit-set-locked-why {
+  font-size: 0.78rem;
+  color: var(--orbit-muted);
+  line-height: 1.45;
+}
+
+/* "Show participant names" off */
+.orbit-meet.is-hide-names .orbit-tile-name,
+.orbit-meet.is-hide-names .orbit-card-name {
+  display: none;
+}
+
+/* A picture picked in Settings, shown inside an initials avatar. */
+.orbit-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.orbit-set-foot {
+  padding: 14px 20px;
+  background: #11141c;
+  border-top: 1px solid #232b38;
+  display: flex;
+  justify-content: flex-end;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ---------- dialogs ---------- */
+.orbit-dlg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.orbit-dlg {
+  background: #161b24;
+  border: 1px solid #283140;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100dvh - 32px);
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  animation: orbit-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbit-dlg-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid #232b38;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.orbit-dlg-title {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.orbit-dlg-title svg {
+  width: 20px;
+  height: 20px;
+}
+.orbit-dlg-title.is-danger {
+  color: #ef4444;
+}
+.orbit-dlg-title.is-pink {
+  color: #f472b6;
+}
+.orbit-dlg-x {
+  background: none;
+  border: none;
+  color: var(--orbit-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.orbit-dlg-x:hover {
+  color: #fff;
+}
+.orbit-dlg-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.orbit-dlg-foot {
+  padding: 14px 20px;
+  background: #11141c;
+  border-top: 1px solid #232b38;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-radius: 0 0 12px 12px;
+}
+.orbit-mfield {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.orbit-mfield label {
+  font-size: 0.88rem;
+  color: var(--orbit-muted);
+}
+.orbit-mfield select,
+.orbit-mfield input {
+  background: #0c0f14;
+  border: 1px solid #2a3342;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+}
+.orbit-mfield select:focus,
+.orbit-mfield input:focus {
+  border-color: var(--orbit-primary);
+}
+.orbit-mfield select option {
+  background: #0c0f14;
+  color: #fff;
+}
+.orbit-mhint {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+.orbit-mhint.is-error {
+  color: #f87171;
+}
+.orbit-mhint.is-warn {
+  color: #fbbf24;
+  background: rgba(120, 53, 15, 0.28);
+  border: 1px solid rgba(251, 191, 36, 0.32);
+  border-radius: 8px;
+  padding: 9px 11px;
+}
+.orbit-mhint.is-warn strong {
+  color: #fde68a;
+}
+.orbit-mbtn {
+  padding: 9px 16px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: var(--orbit-transition);
+}
+.orbit-mbtn.secondary {
+  background: #27303f;
+  color: #e2e8f0;
+}
+.orbit-mbtn.secondary:hover {
+  background: #333f52;
+}
+.orbit-mbtn.primary {
+  background: var(--orbit-primary);
+  color: #fff;
+}
+.orbit-mbtn.primary:hover {
+  background: var(--orbit-primary-hover);
+}
+.orbit-mbtn.primary.is-danger {
+  background: var(--orbit-danger);
+}
+.orbit-mbtn.primary.is-danger:hover {
+  background: var(--orbit-danger-hover);
+}
+.orbit-mbtn.primary.is-pink {
+  background: #ec4899;
+}
+.orbit-mbtn.primary.is-pink:hover {
+  background: #db2777;
+}
+.orbit-donate-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.orbit-donate-pill {
+  background: #0f131a;
+  border: 1px solid #283140;
+  color: #fff;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--orbit-transition);
+}
+.orbit-donate-pill:hover,
+.orbit-donate-pill.is-active {
+  border-color: #ec4899;
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+}
+
+@media (max-width: 920px) {
+  /* Filmstrip becomes a horizontal strip along the bottom on narrow screens,
+     which is what Jitsi does on small viewports. */
+  .orbit-stage {
+    flex-direction: column;
+  }
+  .orbit-filmstrip {
+    width: 100%;
+    flex-direction: row;
+    padding: 6px 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #0d0d0d;
+  }
+  .orbit-thumb {
+    width: 132px;
+    flex-shrink: 0;
+  }
+  .orbit-strip-toggle {
+    top: 0;
+    right: 50%;
+    transform: translateX(50%);
+    width: 46px;
+    height: 18px;
+    border: 1px solid #2a2a2a;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+  }
+  .orbit-tile-avatar {
+    width: 116px;
+    height: 116px;
+    font-size: 2.8rem;
+  }
+  .orbit-alone-media {
+    width: min(320px, 84vw);
+  }
+  .orbit-toolbar-zone {
+    bottom: 12px;
+  }
+  .orbit-toolbar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  .orbit-gridview {
+    padding: 12px 12px 84px;
+    grid-template-columns: 1fr;
+  }
+  .orbit-speakerwrap {
+    padding: 12px;
+  }
+  .orbit-drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    min-width: 0;
+    box-shadow: -16px 0 48px rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* ---------- pre-join / waiting room ----------
+   Dark full-bleed layout: fixed control sidebar on the left, live camera
+   preview (or initials avatar) filling the rest of the screen. */
+.orbit-pj {
+  --pj-bg: #000000;
+  --pj-side: #0c0e12;
+  --pj-line: #1a1e26;
+  --pj-primary: #246bfd;
+  --pj-primary-hover: #1b5cd8;
+  --pj-primary-active: #154bb3;
+  --pj-danger: #cf3737;
+  --pj-danger-hover: #b82828;
+  --pj-input-bg: #dce4f0;
+  --pj-icon-btn: #1c2026;
+  --pj-icon-btn-hover: #292f38;
+  --pj-muted: #94a3b8;
+  --pj-avatar: #582f6e;
+  --pj-transition: all 0.2s ease;
+
+  display: flex;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--pj-bg);
+  color: #fff;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+.orbit-pj-side {
+  width: 380px;
+  min-width: 340px;
+  background-color: var(--pj-side);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 28px;
+  z-index: 10;
+  border-right: 1px solid var(--pj-line);
+}
+.orbit-pj-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: auto 0;
+}
+.orbit-pj-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px;
+  text-align: center;
+}
+.orbit-pj-room {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 22px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+.orbit-pj-name-wrap {
+  width: 100%;
+  max-width: 310px;
+  margin-bottom: 12px;
+}
+.orbit-pj-name {
+  width: 100%;
+  background-color: var(--pj-input-bg);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 11px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: #111827;
+  text-align: center;
+  outline: none;
+  transition: var(--pj-transition);
+}
+.orbit-pj-name:focus {
+  border-color: var(--pj-primary);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(36, 107, 253, 0.25);
+}
+.orbit-pj-name::placeholder {
+  color: #64748b;
+}
+
+.orbit-pj-join-group {
+  position: relative;
+  width: 100%;
+  max-width: 310px;
+  display: flex;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(36, 107, 253, 0.25);
+}
+.orbit-pj-join {
+  flex: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--pj-primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  padding: 12px 16px;
+  font-size: 0.96rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--pj-transition);
+}
+.orbit-pj-join:hover {
+  background-color: var(--pj-primary-hover);
+}
+.orbit-pj-join:active {
+  background-color: var(--pj-primary-active);
+}
+.orbit-pj-join:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.orbit-pj-join-more {
+  background-color: var(--pj-primary);
+  color: #fff;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 6px 6px 0;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--pj-transition);
+}
+.orbit-pj-join-more svg {
+  width: 16px;
+  height: 16px;
+}
+.orbit-pj-join-more:hover {
+  background-color: var(--pj-primary-hover);
+}
+.orbit-pj-join-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 210px;
+  background: #14181f;
+  border: 1px solid #2a313d;
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 20;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+.orbit-pj-join-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 9px 10px;
+  cursor: pointer;
+  transition: var(--pj-transition);
+}
+.orbit-pj-join-menu button:hover {
+  background: #222834;
+  color: #fff;
+}
+
+.orbit-pj-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+.orbit-pj-control {
+  position: relative;
+}
+.orbit-pj-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--pj-icon-btn);
+  border: 1px solid #2d333d;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--pj-transition);
+}
+.orbit-pj-icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.orbit-pj-icon-btn:hover {
+  background: var(--pj-icon-btn-hover);
+}
+.orbit-pj-icon-btn.is-off {
+  color: #f87171;
+}
+.orbit-pj-icon-btn.is-hangup {
+  background-color: var(--pj-danger);
+  border-color: var(--pj-danger);
+}
+.orbit-pj-icon-btn.is-hangup:hover {
+  background-color: var(--pj-danger-hover);
+}
+.orbit-pj-badge {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #252b35;
+  color: #cbd5e1;
+  width: 14px;
+  height: 10px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #3c434f;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+.orbit-pj-badge svg {
+  width: 8px;
+  height: 8px;
+}
+.orbit-pj-badge:hover {
+  background: #313947;
+  color: #fff;
+}
+.orbit-pj-foot {
+  height: 24px;
+}
+
+.orbit-pj-stage {
+  flex: 1;
+  height: 100%;
+  background-color: var(--pj-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.orbit-pj-avatar {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background-color: var(--pj-avatar);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+.orbit-pj-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* mirrored preview */
+  display: block;
+}
+.orbit-pj-video.is-hidden {
+  display: none;
+}
+
+.orbit-pj-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.orbit-pj-modal {
+  background: #181c24;
+  border: 1px solid #2a313d;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 440px;
+  color: #fff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+}
+.orbit-pj-modal-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid #28303d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.orbit-pj-modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+.orbit-pj-modal-close {
+  background: none;
+  border: none;
+  color: var(--pj-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.orbit-pj-modal-close:hover {
+  color: #fff;
+}
+.orbit-pj-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.orbit-pj-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.orbit-pj-field label {
+  font-size: 0.88rem;
+  color: var(--pj-muted);
+}
+.orbit-pj-field select {
+  background: #0d1117;
+  border: 1px solid #2a313d;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+}
+.orbit-pj-field select:focus {
+  border-color: var(--pj-primary);
+}
+
+@media (max-width: 768px) {
+  .orbit-pj {
+    flex-direction: column-reverse;
+  }
+  .orbit-pj-side {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    padding: 20px 16px;
+    border-right: none;
+    border-top: 1px solid var(--pj-line);
+  }
+  .orbit-pj-side .orbit-brand {
+    display: none;
+  }
+  .orbit-pj-stage {
+    height: 45vh;
+    width: 100%;
+  }
+  .orbit-pj-avatar {
+    width: 110px;
+    height: 110px;
+    font-size: 2.5rem;
+  }
+  .orbit-pj-foot {
+    display: none;
+  }
+}
+/* landing */
+.orbit-landing {
+  min-height: 100dvh;
+  background: radial-gradient(1100px 520px at 50% -10%, #16263f 0%, #0a0a0b 62%);
+  color: var(--orbit-fg);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- entry / welcome page ----------
+   Light marketing-style entry page. The meeting room itself stays dark
+   (see .orbit-meet) — this is the only light surface in the app. */
+.orbit-landing {
+  --orbit-l-primary: #1b6ef3;
+  --orbit-l-primary-hover: #155bc9;
+  --orbit-l-primary-active: #0f48a3;
+  --orbit-l-card-bg: #dbeafe;
+  --orbit-l-card-border: #bfdbfe;
+  --orbit-l-card-tab-active: #ffffff;
+  --orbit-l-text-dark: #1e293b;
+  --orbit-l-text-muted: #475569;
+  --orbit-l-text-soft: #334155;
+  --orbit-l-border: #cbd5e1;
+  --orbit-l-placeholder: #94a3b8;
+  --orbit-l-icon: #93c5fd;
+  --orbit-l-radius-sm: 6px;
+  --orbit-l-radius-md: 10px;
+  --orbit-l-radius-lg: 14px;
+  --orbit-l-transition: all 0.2s ease-in-out;
+
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  color-scheme: light;
+  color: var(--orbit-l-text-dark);
+  background: #f8fafc;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* hero */
+.orbit-hero {
+  position: relative;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 48px;
+  color: #fff;
+  background:
+    linear-gradient(rgba(10, 15, 25, 0.72), rgba(10, 15, 25, 0.72)),
+    url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2000&q=80')
+      center / cover no-repeat;
+}
+.orbit-navbar {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 56px;
+}
+.orbit-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.orbit-brand-icon {
+  width: 32px;
+  height: 32px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+.orbit-settings-btn {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--orbit-l-radius-sm);
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: var(--orbit-l-transition);
+}
+.orbit-settings-btn svg {
+  width: 20px;
+  height: 20px;
+}
+.orbit-settings-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.04);
+}
+
+.orbit-hero-content {
+  width: 100%;
+  max-width: 680px;
+  text-align: center;
+  margin: auto 0;
+}
+.orbit-hero-title {
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.orbit-hero-subtitle {
+  font-size: 1.22rem;
+  font-weight: 600;
+  opacity: 0.95;
+  margin: 0 0 26px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+.orbit-meeting-form {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: var(--orbit-l-radius-sm);
+  padding: 4px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  max-width: 580px;
+  margin: 0 auto;
+}
+.orbit-meeting-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--orbit-l-text-dark);
+  background: transparent;
+  min-width: 0;
+}
+.orbit-meeting-input::placeholder {
+  color: var(--orbit-l-placeholder);
+}
+.orbit-start-btn {
+  background-color: var(--orbit-l-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--orbit-l-radius-sm);
+  padding: 12px 24px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--orbit-l-transition);
+  white-space: nowrap;
+}
+.orbit-start-btn:hover {
+  background-color: var(--orbit-l-primary-hover);
+  box-shadow: 0 4px 14px rgba(27, 110, 243, 0.35);
+}
+.orbit-start-btn:active {
+  background-color: var(--orbit-l-primary-active);
+}
+.orbit-hero-subtext {
+  margin: 18px 0 0;
+  font-size: 0.92rem;
+  color: #f1f5f9;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.orbit-hero-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.orbit-hero-link:hover {
+  opacity: 0.85;
+}
+
+/* meetings card */
+/* Namespaced: a bare `.orbit-main` here would override the meeting room's
+   rule later in the cascade and paint the video stage near-white. */
+.orbit-landing-main {
+  flex: 1;
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 44px 20px 60px;
+}
+.orbit-meetings-card {
+  background-color: var(--orbit-l-card-bg);
+  border: 1px solid var(--orbit-l-card-border);
+  border-radius: var(--orbit-l-radius-lg);
+  width: 100%;
+  max-width: 740px;
+  padding: 8px;
+  box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.08);
+}
+.orbit-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+}
+.orbit-tab-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #2563eb;
+  border: none;
+  background: transparent;
+  border-radius: var(--orbit-l-radius-sm);
+  cursor: pointer;
+  transition: var(--orbit-l-transition);
+}
+.orbit-tab-btn.is-active {
+  background: var(--orbit-l-card-tab-active);
+  color: #1d4ed8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.orbit-tab-content {
+  padding: 44px 24px 38px;
+  text-align: center;
+}
+.orbit-tab-pane {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  animation: orbit-fade-in 0.25s ease-in-out;
+}
+.orbit-tab-pane[hidden] {
+  display: none;
+}
+@keyframes orbit-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.orbit-pane-icon {
+  width: 84px;
+  height: 84px;
+  margin-bottom: 20px;
+  color: var(--orbit-l-icon);
+}
+.orbit-pane-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.orbit-pane-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--orbit-l-text-soft);
+  margin: 0 0 24px;
+  font-weight: 450;
+}
+.orbit-calendar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1d4ed8;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.96rem;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--orbit-l-radius-sm);
+  cursor: pointer;
+  transition: var(--orbit-l-transition);
+}
+.orbit-calendar-link:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: #1e40af;
+}
+/* Hard-stop screen for a meeting we refused to join unencrypted. */
+.orbit-fatal {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: #0b0e14;
+  color: #e6eaf2;
+}
+.orbit-fatal h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.orbit-fatal p {
+  margin: 0;
+  max-width: 460px;
+  line-height: 1.5;
+  color: #9aa4b8;
+}
+
+/* Feature not enabled in this deployment: visibly inert rather than a live
+   link-coloured button that silently does nothing when clicked. */
+.orbit-calendar-link.is-disabled,
+.orbit-calendar-link.is-disabled:hover {
+  color: #94a3b8;
+  cursor: not-allowed;
+  background: none;
+}
+
+/* recent meetings list */
+.orbit-recent-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.orbit-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--orbit-l-radius-md);
+}
+.orbit-recent-item:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.orbit-recent-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: var(--orbit-l-text-dark);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.orbit-recent-name:hover {
+  color: var(--orbit-l-primary);
+}
+.orbit-recent-time {
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  color: var(--orbit-l-text-muted);
+}
+.orbit-recent-del {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--orbit-l-text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 4px;
+  transition: var(--orbit-l-transition);
+}
+.orbit-recent-del svg {
+  width: 16px;
+  height: 16px;
+}
+.orbit-recent-del:hover {
+  color: #dc2626;
+}
+
+/* settings modal */
+.orbit-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 16px;
+}
+.orbit-modal {
+  background: #fff;
+  border-radius: var(--orbit-l-radius-md);
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100dvh - 32px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  animation: orbit-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.orbit-modal > form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+@keyframes orbit-pop-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.orbit-modal-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.orbit-modal-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--orbit-l-text-dark);
+  margin: 0;
+}
+.orbit-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #64748b;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+.orbit-modal-close:hover {
+  color: var(--orbit-l-text-dark);
+}
+.orbit-modal-body {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.orbit-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+.orbit-form-group label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--orbit-l-text-soft);
+}
+.orbit-form-group input,
+.orbit-form-group select,
+.orbit-form-group textarea {
+  padding: 9px 12px;
+  border: 1px solid var(--orbit-l-border);
+  border-radius: var(--orbit-l-radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--orbit-l-text-dark);
+  background: #fff;
+  outline: none;
+  resize: vertical;
+}
+.orbit-form-group input:focus,
+.orbit-form-group select:focus,
+.orbit-form-group textarea:focus {
+  border-color: var(--orbit-l-primary);
+}
+.orbit-form-hint {
+  font-size: 0.78rem;
+  color: var(--orbit-l-text-muted);
+}
+.orbit-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.orbit-check svg {
+  width: 16px;
+  height: 16px;
+  color: var(--orbit-l-text-muted);
+}
+.orbit-modal-footer {
+  padding: 14px 22px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-radius: 0 0 var(--orbit-l-radius-md) var(--orbit-l-radius-md);
+}
+.orbit-modal-btn {
+  padding: 8px 16px;
+  border-radius: var(--orbit-l-radius-sm);
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.orbit-modal-btn.secondary {
+  background: #fff;
+  border: 1px solid var(--orbit-l-border);
+  color: var(--orbit-l-text-muted);
+}
+.orbit-modal-btn.secondary:hover {
+  background: #f1f5f9;
+}
+.orbit-modal-btn.primary {
+  background: var(--orbit-l-primary);
+  border: 1px solid var(--orbit-l-primary);
+  color: #fff;
+}
+.orbit-modal-btn.primary:hover {
+  background: var(--orbit-l-primary-hover);
+}
+
+@media (max-width: 640px) {
+  .orbit-hero-title {
+    font-size: 1.95rem;
+  }
+  .orbit-hero-subtitle {
+    font-size: 1.05rem;
+  }
+  .orbit-navbar {
+    margin-bottom: 32px;
+  }
+  .orbit-meeting-form {
+    flex-direction: column;
+    padding: 6px;
+    gap: 8px;
+  }
+  .orbit-meeting-input {
+    width: 100%;
+    text-align: center;
+  }
+  .orbit-start-btn {
+    width: 100%;
+  }
+  .orbit-tabs {
+    flex-direction: column;
+  }
+  .orbit-meetings-card {
+    padding: 6px;
+  }
+  .orbit-tab-content {
+    padding: 28px 12px 24px;
+  }
+}

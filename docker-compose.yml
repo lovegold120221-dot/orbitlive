@@ -1,0 +1,23 @@
+# Orbit Meeting web app (test.abitech.site). Secrets live in .env (0600),
+# passed as container env (server-side only — NEXT_PUBLIC_* are build args).
+name: orbit-meet-test
+
+services:
+  meet:
+    image: orbit-meet-test:1.0.0
+    build:
+      context: /root/meet
+      dockerfile: Dockerfile
+    container_name: orbit-meet-test
+    restart: unless-stopped
+    env_file:
+      - /root/meet/.env.deploy
+    ports:
+      - '127.0.0.1:3000:3000'
+    networks:
+      - meet
+
+networks:
+  meet:
+    name: orbit-meet-test
+    driver: bridge
