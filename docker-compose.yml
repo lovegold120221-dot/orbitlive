@@ -1,4 +1,4 @@
-# Orbit Meeting web app (test.abitech.site). Secrets live in .env (0600),
+# Orbit Meeting web app (meet.abitech.site). Secrets live in .env (0600),
 # passed as container env (server-side only — NEXT_PUBLIC_* are build args).
 name: orbit-meet-test
 

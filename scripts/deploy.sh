@@ -13,7 +13,7 @@ cd /root/meet
 SERVICE=meet
 IMAGE=orbit-meet-test:1.0.0
 CONTAINER=orbit-meet-test
-URL="${DEPLOY_URL:-https://test.abitech.site}"
+URL="${DEPLOY_URL:-https://meet.abitech.site}"
 # A string that only exists in the build being deployed, used as a live marker.
 MARKER="${DEPLOY_MARKER:-}"
 # Seconds to wait for the container to answer after it starts.

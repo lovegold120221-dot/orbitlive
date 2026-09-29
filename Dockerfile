@@ -1,4 +1,4 @@
-# Orbit Meeting (LiveKit) web app for test.abitech.site.
+# Orbit Meeting (LiveKit) web app for meet.abitech.site.
 FROM node:22-alpine AS deps
 RUN corepack enable && corepack prepare pnpm@10.18.2 --activate
 WORKDIR /app
@@ -12,7 +12,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # NEXT_PUBLIC_* are baked at build time.
 ARG NEXT_PUBLIC_CONN_DETAILS_ENDPOINT=/api/connection-details
-ARG NEXT_PUBLIC_ORBIT_TRANSLATOR_WS=wss://test.abitech.site/orbit-translator/
+ARG NEXT_PUBLIC_ORBIT_TRANSLATOR_WS=wss://meet.abitech.site/orbit-translator/
 ENV NEXT_PUBLIC_CONN_DETAILS_ENDPOINT=$NEXT_PUBLIC_CONN_DETAILS_ENDPOINT
 ENV NEXT_PUBLIC_ORBIT_TRANSLATOR_WS=$NEXT_PUBLIC_ORBIT_TRANSLATOR_WS
 RUN pnpm build
